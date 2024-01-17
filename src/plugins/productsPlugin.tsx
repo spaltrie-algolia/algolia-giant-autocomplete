@@ -15,12 +15,6 @@ import { searchClient } from '../searchClient';
 import { ProductHit } from '../types';
 import { cx } from '../utils';
 
-function invokeEscKey() {
-  var ev = document.createEvent('KeyboardEvent');
-  ev.initKeyEvent(
-    'keydown', true, true, window, false, false, false, false, 27, 0);
-  document.body.dispatchEvent(ev);
-}
 
 export const productsPlugin: AutocompletePlugin<ProductHit, {}> = {
   getSources({ query }) {
@@ -106,7 +100,7 @@ function ProductItem({ hit, components }: ProductItemProps) {
 
   return (
     <a
-      href=""
+      href={hit.urlCrawl}
       // target="_blank"
       rel="noreferrer noopener"
       className="aa-ItemLink aa-ProductItem"

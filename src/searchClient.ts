@@ -6,5 +6,5 @@ import algoliasearch from "algoliasearch/lite";
 // );
 export const searchClient = algoliasearch(
   "CCZC5HO11D",
-  "ea4b0ab83c853a47cbe56b3805d66c80"
+  "cdc1ab3a3e323a52d46222427d43b6d4"
 );
