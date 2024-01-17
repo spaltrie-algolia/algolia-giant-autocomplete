@@ -21,7 +21,7 @@ import '@algolia/autocomplete-theme-classic';
 import instantsearch from 'instantsearch.js';
 import historyRouter from 'instantsearch.js/es/lib/routers/history';
 import { connectSearchBox } from 'instantsearch.js/es/connectors';
-import { hierarchicalMenu, hits, pagination, refinementList, rangeSlider } from 'instantsearch.js/es/widgets';
+import { hierarchicalMenu, hits, pagination, refinementList, rangeSlider, configure } from 'instantsearch.js/es/widgets';
 import { searchClient } from './searchClient';
 import { ALGOLIA_PRODUCTS_INDEX_NAME } from './constants';
 import { ProductItem } from './plugins/productsPlugin';
@@ -47,7 +47,7 @@ const instantSearchRouter = historyRouter();
 const search = instantsearch({
   searchClient,
   indexName: ALGOLIA_PRODUCTS_INDEX_NAME,
-  routing: instantSearchRouter
+  routing: instantSearchRouter,
 });
 
 // Mount a virtual search box to manipulate InstantSearch's `query` UI
@@ -60,27 +60,14 @@ search.addWidgets([
     container: '#categories',
     attributes: ['categoriesHierarchy.lvl0', 'categoriesHierarchy.lvl1', 'categoriesHierarchy.lvl2'],
   }),
+  configure({
+    hitsPerPage: 9,
+  }),
   hits({
     container: '#hits',
-    // templates: {
-    //   item(hit, { html, components }) {
-    //     return html`
-
-    //     <div>
-    //         ${components.Highlight({ attribute: 'Name', hit })}
-    //       </div>
-    //     `;
-    //   },
-    // },
     templates: {
       item(item, { html, components }) {
         return <ProductItem hit={item} components={components} />;
-        // return html`
-
-        //   <div>
-        //     ${components.Highlight({ attribute: 'Name', hit })}
-        //   </div >
-        //   `;
       },
     },
   }),

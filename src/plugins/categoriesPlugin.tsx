@@ -11,6 +11,18 @@ import { GridIcon } from '../components';
 import { ALGOLIA_PRODUCTS_INDEX_NAME } from '../constants';
 import { searchClient } from '../searchClient';
 import { CategoryHit } from '../types';
+import {
+  setInstantSearchUiState
+} from '../app';
+
+function onSelect({ setIsOpen, setQuery, event, query, menu }) {
+  setQuery(''); // reset the query  
+  setInstantSearchUiState({
+    query: '',
+    hierarchicalMenu: { ['categoriesHierarchy.lvl0']: menu }
+  });
+
+}
 
 export const categoriesPlugin: AutocompletePlugin<CategoryHit, {}> = {
   getSources({ query }) {
@@ -27,7 +39,7 @@ export const categoriesPlugin: AutocompletePlugin<CategoryHit, {}> = {
             queries: [
               {
                 indexName: ALGOLIA_PRODUCTS_INDEX_NAME,
-                facet: 'flat_category',
+                facet: 'categoriesHierarchy.lvl2',
                 params: {
                   facetQuery: query,
                   maxFacetHits: 2,
@@ -44,6 +56,16 @@ export const categoriesPlugin: AutocompletePlugin<CategoryHit, {}> = {
             return <CategoriesItem hit={item} components={components} />;
           },
         },
+        onSelect({ setIsOpen, setQuery, item, event }) {
+          onSelect({
+            setQuery,
+            setIsOpen,
+            event,
+            query: '',
+            menu: item.label.split(' > '),
+          });
+        },
+
       },
     ];
   },
@@ -56,13 +78,13 @@ type CategoriesItemProps = {
 
 function CategoriesItem({ hit, components }: CategoriesItemProps) {
   return (
-    <div className="aa-ItemWrapper">
+    <div className="aa-ItemWrapper" style="font-size: 0.9em">
       <div className="aa-ItemContent">
         <div className="aa-ItemIcon aa-ItemIcon--noBorder">
           <GridIcon />
         </div>
         <div className="aa-ItemContentBody">
-          <div className="aa-ItemContentTitle">
+          <div className="aa-ItemContentTitle" >
             <components.ReverseHighlight hit={hit} attribute="label" />
           </div>
         </div>
