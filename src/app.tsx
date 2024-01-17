@@ -24,7 +24,7 @@ import { connectSearchBox } from 'instantsearch.js/es/connectors';
 import { hierarchicalMenu, hits, pagination, refinementList, rangeSlider } from 'instantsearch.js/es/widgets';
 import { searchClient } from './searchClient';
 import { ALGOLIA_PRODUCTS_INDEX_NAME } from './constants';
-
+import { ProductItem } from './plugins/productsPlugin';
 
 const removeDuplicates = uniqBy(({ source, item }) => {
   const sourceIds = ['recentSearchesPlugin', 'querySuggestionsPlugin'];
@@ -73,66 +73,14 @@ search.addWidgets([
     //   },
     // },
     templates: {
-      item(hit, { html, components }) {
-
+      item(item, { html, components }) {
+        return <ProductItem hit={item} components={components} />;
         // return html`
-        // <div className="aa-ItemContent">
-        //   <img
-        //     src=${hit.imageCrawl ? hit.imageCrawl : hit.skuImages[0].Path}
-        //     alt=${hit.Name}
-        //   />
-        // </div>
 
-        // <div className="aa-ItemContentBody">
         //   <div>
-        //     ${hit.brandName && (
-        //     <div className="aa-ItemContentBrand">
-        //       <components.Highlight hit={hit} attribute="brandName" />
-        //     </div>
-        //   )}
-        //     <div className="aa-ItemContentTitleWrapper">
-        //       <div className="aa-ItemContentTitle">
-        //         <components.Highlight hit=${hit} attribute="Name" />
-        //       </div>
-        //     </div>
-        //   </div>
-        //   <div>
-        //     <div className="aa-ItemContentPrice">
-        //       <div className="aa-ItemContentPriceCurrent">
-        //       ${hit.skuPrice}
-        //       </div>
-        //     </div>
-        //     <div className="aa-ItemContentRating">
-        //       <ul>
-        //         ${hit.reviewCountCrawl > 0 && Array(5)
-        //     .fill(null)
-        //     .map((_, index) => (
-        //       <li key={index}>
-        //         <div
-        //           className={cx(
-        //             'aa-ItemIcon aa-ItemIcon--noBorder aa-StarIcon',
-        //             index >= hit.reviewScoreBucket && 'aa-StarIcon--muted'
-        //           )}
-        //         >
-        //           <StarIcon />
-        //         </div>
-        //       </li>
-        //     ))}
-        //       </ul>
-        //       <span className="aa-ItemContentRatingReviews">
-        //         ${hit.reviewCountCrawl > 0 && (hit.reviewCountCrawl)}
-        //       </span>
-        //     </div>
-        //   </div>
-        // </div>`;
-        //
-        //return <ProductItem hit={item} components={components} />;
-        return html`
-
-          <div>
-            ${components.Highlight({ attribute: 'Name', hit })}
-          </div >
-          `;
+        //     ${components.Highlight({ attribute: 'Name', hit })}
+        //   </div >
+        //   `;
       },
     },
   }),
@@ -161,7 +109,7 @@ search.start();
 
 
 // Set the InstantSearch index UI state from external events.
-function setInstantSearchUiState(indexUiState) {
+export function setInstantSearchUiState(indexUiState) {
   search.setUiState(uiState => ({
     ...uiState,
     [ALGOLIA_PRODUCTS_INDEX_NAME]: {
@@ -197,11 +145,11 @@ const { setQuery } = autocomplete({
   },
   onSubmit({ state }) {
     setInstantSearchUiState({ query: state.query });
-    console.log('query onSumit: ' + state.query)
   },
-  onReset() {
-    setInstantSearchUiState({ query: '' });
+  onReset(context) {
+    setInstantSearchUiState({ query: '', hierarchicalMenu: {}, refinementList: [], range: '' });
     console.log('reset state ')
+    context.refresh();
   },
   onStateChange({ prevState, state }) {
     if (!skipInstantSearchUiStateUpdate && prevState.query !== state.query) {

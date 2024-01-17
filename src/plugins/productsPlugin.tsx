@@ -94,7 +94,7 @@ type ProductItemProps = {
   components: AutocompleteComponents;
 };
 
-function ProductItem({ hit, components }: ProductItemProps) {
+export function ProductItem({ hit, components }: ProductItemProps) {
   const [loaded, setLoaded] = useState(false);
   const [favorite, setFavorite] = useState(false);
 

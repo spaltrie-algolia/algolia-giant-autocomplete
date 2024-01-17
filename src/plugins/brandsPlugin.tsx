@@ -12,6 +12,23 @@ import { ALGOLIA_PRODUCTS_INDEX_NAME } from '../constants';
 import { searchClient } from '../searchClient';
 import { BrandHit } from '../types';
 
+import {
+  setInstantSearchUiState
+} from '../app';
+
+function onSelect({ setIsOpen, setQuery, event, query, category }) {
+  // You want to trigger the default browser behavior if the event is modified.
+  // if (isModifierEvent(event)) {
+  //   return;
+  // }
+  setQuery(''); // reset the query  
+  setInstantSearchUiState({
+    query: '',
+    refinementList: { brandName: [category] }
+  });
+
+}
+
 export const brandsPlugin: AutocompletePlugin<BrandHit, {}> = {
   getSources({ query }) {
     if (!query) {
@@ -44,8 +61,21 @@ export const brandsPlugin: AutocompletePlugin<BrandHit, {}> = {
             return <BrandItem hit={item} components={components} />;
           },
         },
+        onSelect({ setIsOpen, setQuery, item, event }) {
+          onSelect({
+            setQuery,
+            setIsOpen,
+            event,
+            query: '',
+            category: item.label,
+          });
+        },
       },
     ];
+  },
+
+  onSubmit(params) {
+    console.log('onSubmit => brandsPlugin ');
   },
 };
 

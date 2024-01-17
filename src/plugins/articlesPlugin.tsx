@@ -44,6 +44,9 @@ export const articlesPlugin: AutocompletePlugin<ArticleHit, {}> = {
         onSelect({ setIsOpen }) {
           setIsOpen(true);
         },
+        getItemUrl({ item }) {
+          return item.url;
+        },
         templates: {
           header({ Fragment }) {
             return (
@@ -56,12 +59,13 @@ export const articlesPlugin: AutocompletePlugin<ArticleHit, {}> = {
           item({ item }) {
             return <ArticleItem hit={item} />;
           },
+
           footer({ state }) {
             return (
               state.context.nbArticles > 2 && (
                 <div style={{ textAlign: 'center' }}>
                   <a
-                    href="https://example.org/"
+                    href="https://www.giant-bicycles.com/us/news"
                     target="_blank"
                     rel="noreferrer noopener"
                     className="aa-SeeAllLink"
@@ -84,7 +88,7 @@ type ArticleItemProps = {
 
 function ArticleItem({ hit }: ArticleItemProps) {
   return (
-    <a href="#" className="aa-ItemLink aa-ArticleItem">
+    <a href={hit.url} target="_blank" className="aa-ItemLink aa-ArticleItem">
       <div className="aa-ItemContent">
         <div className="aa-ItemPicture">
           <img src={hit.image} alt={hit.title} />
