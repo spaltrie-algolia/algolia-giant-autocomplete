@@ -1,14 +1,15 @@
 {
-  "name": "@algolia/autocomplete-example-two-column-layout",
-  "description": "Autocomplete example with two-column layout",
+  "name": "@algolia/giant-custom-demo",
+  "description": "Giant custom demo",
+  "source": "src/index.html",
   "version": "1.14.0",
   "private": true,
   "license": "MIT",
   "scripts": {
     "clean-dist": "rm -rf dist && mkdir dist",
     "copy-img": "cp -vR ./src/img ./dist",
-    "build": "parcel build index.html",
-    "start": "parcel index.html"
+    "build": "parcel build",
+    "start": "parcel"
   },
   "dependencies": {
     "@algolia/autocomplete-core": "1.14.0",

@@ -97,7 +97,12 @@ type ProductItemProps = {
 export function ProductItem({ hit, components }: ProductItemProps) {
   const [loaded, setLoaded] = useState(false);
   const [favorite, setFavorite] = useState(false);
-
+  let img = hit.imageCrawl;
+  if (!img) {
+    if (hit.skuImages && hit.skuImages.length > 0) {
+      img = hit.skuImages[0].Path;
+    }
+  }
   return (
     <a
       href={hit.urlCrawl}
@@ -110,7 +115,7 @@ export function ProductItem({ hit, components }: ProductItemProps) {
           className={cx('aa-ItemPicture', loaded && 'aa-ItemPicture--loaded')}
         >
           <img
-            src={hit.imageCrawl ? hit.imageCrawl : hit.skuImages[0].Path}
+            src={img}
             alt={hit.Name}
             onLoad={() => setLoaded(true)}
           />

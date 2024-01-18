@@ -12,7 +12,7 @@ import { popularCategoriesPlugin } from './plugins/popularCategoriesPlugin';
 import { popularPlugin } from './plugins/popularPlugin';
 import { productsPlugin } from './plugins/productsPlugin';
 import { querySuggestionsPlugin } from './plugins/querySuggestionsPlugin';
-import { quickAccessPlugin } from './plugins/quickAccessPlugin';
+// import { quickAccessPlugin } from './plugins/quickAccessPlugin';
 import { recentSearchesPlugin } from './plugins/recentSearchesPlugin';
 import { cx, hasSourceActiveItem, isDetached } from './utils';
 
@@ -21,7 +21,7 @@ import '@algolia/autocomplete-theme-classic';
 import instantsearch from 'instantsearch.js';
 import historyRouter from 'instantsearch.js/es/lib/routers/history';
 import { connectSearchBox } from 'instantsearch.js/es/connectors';
-import { hierarchicalMenu, hits, pagination, refinementList, rangeSlider, configure } from 'instantsearch.js/es/widgets';
+import { hierarchicalMenu, hits, pagination, refinementList, rangeSlider, configure, panel } from 'instantsearch.js/es/widgets';
 import { searchClient } from './searchClient';
 import { ALGOLIA_PRODUCTS_INDEX_NAME } from './constants';
 import { ProductItem } from './plugins/productsPlugin';
@@ -54,9 +54,36 @@ const search = instantsearch({
 // state parameter.
 const virtualSearchBox = connectSearchBox(() => { });
 
+const categoriesHierarchicalMenu = panel({
+  templates: {
+    header: 'Categories',
+  },
+  hidden(options) {
+    return options.results.hierarchicalFacets[0].data === null;
+  },
+})(hierarchicalMenu);
+
+const brandRefinementList = panel({
+  templates: {
+    header: 'Brands',
+  },
+  hidden(options) {
+    return options.results.nbHits === 0;
+  },
+})(refinementList);
+
+const priceRangeSlider = panel({
+  templates: {
+    header: 'Price Range',
+  },
+  hidden(options) {
+    return options.results.nbHits === 0;
+  },
+})(rangeSlider);
+
 search.addWidgets([
   virtualSearchBox({}),
-  hierarchicalMenu({
+  categoriesHierarchicalMenu({
     container: '#categories',
     attributes: ['categoriesHierarchy.lvl0', 'categoriesHierarchy.lvl1', 'categoriesHierarchy.lvl2'],
   }),
@@ -74,15 +101,15 @@ search.addWidgets([
   pagination({
     container: '#pagination',
   }),
-  refinementList({
+  brandRefinementList({
     container: '#brand-refine',
     attribute: 'brandName',
     sortBy: ['name:asc'],
-    cssClasses: {
-      item: ['col-sm-3'],
-    },
+    // cssClasses: {
+    //   item: ['col-sm-3'],
+    // },
   }),
-  rangeSlider({
+  priceRangeSlider({
     container: '#price-refine',
     attribute: 'skuPrice',
     precision: -1,
@@ -152,7 +179,7 @@ const { setQuery } = autocomplete({
     productsPlugin,
     articlesPlugin,
     popularPlugin,
-    quickAccessPlugin,
+    //quickAccessPlugin,
     popularCategoriesPlugin,
   ],
   reshape({ sourcesBySourceId, sources, state }) {

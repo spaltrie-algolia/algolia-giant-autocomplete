@@ -783,6 +783,16 @@ body {
   }
 }
 
+
+.ais-Panel-footer,
+.ais-Panel-header {
+  color: rgb(6, 3, 141) !important;
+}
+
+.ais-Panel-header {
+  text-transform: none !important;
+}
+
 /* *************************************************************************************************************************************** */
 
 .header-nav {
