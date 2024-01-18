@@ -21,7 +21,7 @@ import '@algolia/autocomplete-theme-classic';
 import instantsearch from 'instantsearch.js';
 import historyRouter from 'instantsearch.js/es/lib/routers/history';
 import { connectSearchBox } from 'instantsearch.js/es/connectors';
-import { hierarchicalMenu, hits, pagination, refinementList, rangeSlider, configure, panel, currentRefinements } from 'instantsearch.js/es/widgets';
+import { hierarchicalMenu, hits, pagination, refinementList, rangeSlider, configure, panel, currentRefinements, dynamicWidgets } from 'instantsearch.js/es/widgets';
 import { searchClient } from './searchClient';
 import { ALGOLIA_PRODUCTS_INDEX_NAME } from './constants';
 import { ProductItem } from './plugins/productsPlugin';
@@ -83,6 +83,29 @@ const priceRangeSlider = panel({
 
 search.addWidgets([
   virtualSearchBox({}),
+  dynamicWidgets({
+    container: '#dynamic-widgets',
+    widgets: [
+      // container =>
+      //   categoriesHierarchicalMenu({
+      //     container,
+      //     attributes: ['categoriesHierarchy.lvl0', 'categoriesHierarchy.lvl1', 'categoriesHierarchy.lvl2'],
+      //   }),
+      container =>
+        brandRefinementList({ container, attribute: 'brandName' }),
+      container =>
+        priceRangeSlider({
+          container,
+          attribute: 'skuPrice',
+          precision: -1,
+          pips: false
+        }),
+    ],
+    fallbackWidget: ({ container, attribute }) =>
+      panel({ templates: { header: attribute } })(
+        refinementList
+      )({ container, attribute }),
+  }),
   currentRefinements({
     container: '#current-refinements',
     transformItems(items) {
@@ -94,10 +117,6 @@ search.addWidgets([
       })
       //return items.filter(item => item.attribute !== 'brand');
     },
-  }),
-  categoriesHierarchicalMenu({
-    container: '#categories',
-    attributes: ['categoriesHierarchy.lvl0', 'categoriesHierarchy.lvl1', 'categoriesHierarchy.lvl2'],
   }),
   configure({
     hitsPerPage: 9,
@@ -113,20 +132,24 @@ search.addWidgets([
   pagination({
     container: '#pagination',
   }),
-  brandRefinementList({
-    container: '#brand-refine',
-    attribute: 'brandName',
-    sortBy: ['name:asc'],
-    // cssClasses: {
-    //   item: ['col-sm-3'],
-    // },
+  categoriesHierarchicalMenu({
+    container: '#categories',
+    attributes: ['categoriesHierarchy.lvl0', 'categoriesHierarchy.lvl1', 'categoriesHierarchy.lvl2'],
   }),
-  priceRangeSlider({
-    container: '#price-refine',
-    attribute: 'skuPrice',
-    precision: -1,
-    pips: false
-  }),
+  // brandRefinementList({
+  //   container: '#brand-refine',
+  //   attribute: 'brandName',
+  //   sortBy: ['name:asc'],
+  //   // cssClasses: {
+  //   //   item: ['col-sm-3'],
+  //   // },
+  // }),
+  // priceRangeSlider({
+  //   container: '#price-refine',
+  //   attribute: 'skuPrice',
+  //   precision: -1,
+  //   pips: false
+  // }),
 ]);
 
 
