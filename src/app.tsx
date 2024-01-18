@@ -21,7 +21,7 @@ import '@algolia/autocomplete-theme-classic';
 import instantsearch from 'instantsearch.js';
 import historyRouter from 'instantsearch.js/es/lib/routers/history';
 import { connectSearchBox } from 'instantsearch.js/es/connectors';
-import { hierarchicalMenu, hits, pagination, refinementList, rangeSlider, configure, panel } from 'instantsearch.js/es/widgets';
+import { hierarchicalMenu, hits, pagination, refinementList, rangeSlider, configure, panel, currentRefinements } from 'instantsearch.js/es/widgets';
 import { searchClient } from './searchClient';
 import { ALGOLIA_PRODUCTS_INDEX_NAME } from './constants';
 import { ProductItem } from './plugins/productsPlugin';
@@ -83,6 +83,18 @@ const priceRangeSlider = panel({
 
 search.addWidgets([
   virtualSearchBox({}),
+  currentRefinements({
+    container: '#current-refinements',
+    transformItems(items) {
+      return items.map(item => {
+        if (item.label == 'brandName') item.label = 'Brand';
+        if (item.label == 'categoriesHierarchy.lvl0') item.label = 'Categories';
+        if (item.label == 'skuPrice') item.label = 'Price Range';
+        return item;
+      })
+      //return items.filter(item => item.attribute !== 'brand');
+    },
+  }),
   categoriesHierarchicalMenu({
     container: '#categories',
     attributes: ['categoriesHierarchy.lvl0', 'categoriesHierarchy.lvl1', 'categoriesHierarchy.lvl2'],

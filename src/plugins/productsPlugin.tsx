@@ -33,7 +33,7 @@ export const productsPlugin: AutocompletePlugin<ProductHit, {}> = {
                 indexName: ALGOLIA_PRODUCTS_INDEX_NAME,
                 query,
                 params: {
-                  hitsPerPage: 4,
+                  hitsPerPage: 8,
                 },
               },
             ],
