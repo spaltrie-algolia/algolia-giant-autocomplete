@@ -42,10 +42,20 @@ export const categoriesPlugin: AutocompletePlugin<CategoryHit, {}> = {
                 facet: 'categoriesHierarchy.lvl2',
                 params: {
                   facetQuery: query,
-                  maxFacetHits: 2,
+                  maxFacetHits: 6,
                 },
               },
             ],
+            transformResponse({ facetHits }) {
+              let hits = facetHits[0];
+              facetHits[0] = hits.sort((a, b) => {
+                if (a.label < b.label) return -1;
+                return 1;
+              });
+
+              return facetHits;
+
+            },
           });
         },
         getItemInputValue({ item }) {
