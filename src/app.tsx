@@ -159,15 +159,33 @@ search.start();
 
 // Set the InstantSearch index UI state from external events.
 export function setInstantSearchUiState(indexUiState) {
-  search.setUiState(uiState => ({
-    ...uiState,
-    [ALGOLIA_PRODUCTS_INDEX_NAME]: {
-      ...uiState[ALGOLIA_PRODUCTS_INDEX_NAME],
-      // We reset the page when the search state changes.
-      page: 1,
-      ...indexUiState,
-    },
-  }));
+  search.helper?.state.ruleContexts = []; // reset rule contexts => bug?
+  search.setUiState(uiState => {
+    var e = document.getElementById("perso-segment");
+    var value = e.options[e.selectedIndex].value;
+    var text = e.options[e.selectedIndex].text;
+
+    if (uiState && uiState[ALGOLIA_PRODUCTS_INDEX_NAME]) {
+      //uiState[ALGOLIA_PRODUCTS_INDEX_NAME].configure?.context = value;
+      uiState[ALGOLIA_PRODUCTS_INDEX_NAME].configure = {
+        ...uiState[ALGOLIA_PRODUCTS_INDEX_NAME].configure,
+        ruleContexts: [value],
+        enableRules: true
+      };
+      productsPlugin.setPerso(value);
+      console.log('hello4: ', uiState[ALGOLIA_PRODUCTS_INDEX_NAME]);
+    }
+
+    return {
+      ...uiState,
+      [ALGOLIA_PRODUCTS_INDEX_NAME]: {
+        ...uiState[ALGOLIA_PRODUCTS_INDEX_NAME],
+        // We reset the page when the search state changes.
+        page: 1,
+        ...indexUiState,
+      },
+    }
+  });
 }
 
 // Return the InstantSearch index UI state.
@@ -193,7 +211,13 @@ const { setQuery } = autocomplete({
     query: searchPageState.query || '',
   },
   onSubmit({ state }) {
-    setInstantSearchUiState({ query: state.query });
+    // const options = {
+    //   ruleContexts: ['test4'],
+    //   enableRules: true
+    // }
+    setInstantSearchUiState({
+      query: state.query //, options
+    });
   },
   onReset(context) {
     setInstantSearchUiState({ query: '', hierarchicalMenu: {}, refinementList: [], range: '' });
@@ -201,8 +225,12 @@ const { setQuery } = autocomplete({
     context.refresh();
   },
   onStateChange({ prevState, state }) {
+    // const options = {
+    //   ruleContexts: ['test4'],
+    //   enableRules: true
+    // }
     if (!skipInstantSearchUiStateUpdate && prevState.query !== state.query) {
-      setInstantSearchUiState({ query: state.query });
+      setInstantSearchUiState({ query: state.query }); //, options });
     }
     skipInstantSearchUiStateUpdate = false;
   },
@@ -366,5 +394,6 @@ const { setQuery } = autocomplete({
 window.addEventListener('popstate', () => {
   skipInstantSearchUiStateUpdate = true;
   setQuery(search.helper?.state.query || '');
+  console.log('setQuery');
 });
 

@@ -15,17 +15,23 @@ import { searchClient } from '../searchClient';
 import { ProductHit } from '../types';
 import { cx } from '../utils';
 
+let segmentPerso = '';
 
 export const productsPlugin: AutocompletePlugin<ProductHit, {}> = {
-  getSources({ query }) {
+  setPerso(value) {
+    segmentPerso = value;
+  },
+  getSources(options1) {
     // if (!query) {
     //   return [];
     // }
+    const query = options1.query;
 
     return [
       {
         sourceId: 'productsPlugin',
-        getItems({ setContext }) {
+        getItems(options2) {
+          const setContext = options2.setContext;
           return getAlgoliaResults<ProductHit>({
             searchClient,
             queries: [
@@ -34,6 +40,8 @@ export const productsPlugin: AutocompletePlugin<ProductHit, {}> = {
                 query,
                 params: {
                   hitsPerPage: 8,
+                  ruleContexts: segmentPerso ? [segmentPerso] : [],
+                  enableRules: true
                 },
               },
             ],

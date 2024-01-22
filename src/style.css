@@ -1,3 +1,17 @@
+.row {
+  display: flex;
+}
+
+.column {
+  flex: 33%;
+}
+
+.ais-perso-dropdown {
+  margin-top: -1em;
+  width: 180px;
+  float: right;
+}
+
 * {
   box-sizing: border-box;
 }
