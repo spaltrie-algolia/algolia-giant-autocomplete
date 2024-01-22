@@ -21,17 +21,15 @@ export const productsPlugin: AutocompletePlugin<ProductHit, {}> = {
   setPerso(value) {
     segmentPerso = value;
   },
-  getSources(options1) {
+  getSources({ query }) {
     // if (!query) {
     //   return [];
     // }
-    const query = options1.query;
 
     return [
       {
         sourceId: 'productsPlugin',
-        getItems(options2) {
-          const setContext = options2.setContext;
+        getItems({ setContext }) {
           return getAlgoliaResults<ProductHit>({
             searchClient,
             queries: [
