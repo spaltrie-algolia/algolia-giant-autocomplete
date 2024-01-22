@@ -182,8 +182,9 @@ export function setInstantSearchUiState(indexUiState) {
         ruleContexts: [value],
         enableRules: true
       };
+      uiState[ALGOLIA_PRODUCTS_INDEX_NAME].query = indexUiState.query;
       productsPlugin.setPerso(value);
-      console.log('hello4: ', uiState[ALGOLIA_PRODUCTS_INDEX_NAME]);
+      console.log('hello5: ', uiState[ALGOLIA_PRODUCTS_INDEX_NAME]);
     }
 
     return {
@@ -192,7 +193,7 @@ export function setInstantSearchUiState(indexUiState) {
         ...uiState[ALGOLIA_PRODUCTS_INDEX_NAME],
         // We reset the page when the search state changes.
         page: 1,
-        ...indexUiState,
+        //...indexUiState,
       },
     }
   });
@@ -240,7 +241,11 @@ const { setQuery } = autocomplete({
     //   enableRules: true
     // }
     if (!skipInstantSearchUiStateUpdate && prevState.query !== state.query) {
+      console.log('******')
+      console.log('prevState.query: ' + prevState.query)
+      console.log('state.query: ' + state.query)
       setInstantSearchUiState({ query: state.query }); //, options });
+      console.log('skipInstantSearchUiStateUpdate: updated')
     }
     skipInstantSearchUiStateUpdate = false;
   },
@@ -407,4 +412,4 @@ window.addEventListener('popstate', () => {
   //  console.log('setQuery');
 });
 
-setInstantSearchUiState(''); // Initial State with rulesContext
+setInstantSearchUiState({ query: '' }); // Initial State with rulesContext
