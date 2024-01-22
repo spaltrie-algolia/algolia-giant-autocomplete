@@ -26,6 +26,16 @@ import { searchClient } from './searchClient';
 import { ALGOLIA_PRODUCTS_INDEX_NAME } from './constants';
 import { ProductItem } from './plugins/productsPlugin';
 
+const selectElement = document.querySelector("#perso-segment");
+
+selectElement?.addEventListener("change", (event) => {
+  console.log(`You like ${event?.target?.value}`);
+  setInstantSearchUiState({
+    query: '' // Force reset the UI
+  });
+});
+
+
 const removeDuplicates = uniqBy(({ source, item }) => {
   const sourceIds = ['recentSearchesPlugin', 'querySuggestionsPlugin'];
   if (sourceIds.indexOf(source.sourceId) === -1) {
@@ -208,7 +218,7 @@ const { setQuery } = autocomplete({
   insights: true,
   detachedMediaQuery: 'none',
   initialState: {
-    query: searchPageState.query || '',
+    query: searchPageState.query || ''
   },
   onSubmit({ state }) {
     // const options = {
@@ -394,6 +404,7 @@ const { setQuery } = autocomplete({
 window.addEventListener('popstate', () => {
   skipInstantSearchUiStateUpdate = true;
   setQuery(search.helper?.state.query || '');
-  console.log('setQuery');
+  //  console.log('setQuery');
 });
 
+setInstantSearchUiState(''); // Initial State with rulesContext
