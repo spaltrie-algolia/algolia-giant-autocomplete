@@ -193,7 +193,7 @@ export function setInstantSearchUiState(indexUiState) {
         ...uiState[ALGOLIA_PRODUCTS_INDEX_NAME],
         // We reset the page when the search state changes.
         page: 1,
-        //...indexUiState,
+        ...indexUiState,
       },
     }
   });
