@@ -169,14 +169,14 @@ search.start();
 
 // Set the InstantSearch index UI state from external events.
 export function setInstantSearchUiState(indexUiState) {
-  search.helper?.state.ruleContexts = []; // reset rule contexts => bug?
+
   search.setUiState(uiState => {
-    var e = document.getElementById("perso-segment");
-    var value = e.options[e.selectedIndex].value;
-    var text = e.options[e.selectedIndex].text;
 
     if (uiState && uiState[ALGOLIA_PRODUCTS_INDEX_NAME]) {
-      //uiState[ALGOLIA_PRODUCTS_INDEX_NAME].configure?.context = value;
+      search.helper?.state.ruleContexts = []; // reset rule contexts => bug?
+      var e = document.getElementById("perso-segment");
+      var value = e.options[e.selectedIndex].value;
+
       uiState[ALGOLIA_PRODUCTS_INDEX_NAME].configure = {
         ...uiState[ALGOLIA_PRODUCTS_INDEX_NAME].configure,
         ruleContexts: [value],
@@ -184,7 +184,9 @@ export function setInstantSearchUiState(indexUiState) {
       };
       uiState[ALGOLIA_PRODUCTS_INDEX_NAME].query = indexUiState.query;
       productsPlugin.setPerso(value);
-      console.log('hello5: ', uiState[ALGOLIA_PRODUCTS_INDEX_NAME]);
+      // console.log('hello5: ', uiState[ALGOLIA_PRODUCTS_INDEX_NAME]);
+      // console.log('hello5b: ', indexUiState);
+      // console.log('hello5c: ', indexUiState);
     }
 
     return {
