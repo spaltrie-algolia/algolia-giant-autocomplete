@@ -21,7 +21,7 @@ import '@algolia/autocomplete-theme-classic';
 import instantsearch from 'instantsearch.js';
 import historyRouter from 'instantsearch.js/es/lib/routers/history';
 import { connectSearchBox } from 'instantsearch.js/es/connectors';
-import { hierarchicalMenu, hits, pagination, refinementList, rangeSlider, configure, panel, currentRefinements, dynamicWidgets } from 'instantsearch.js/es/widgets';
+import { queryRuleCustomData, hierarchicalMenu, hits, pagination, refinementList, rangeSlider, configure, panel, currentRefinements, dynamicWidgets } from 'instantsearch.js/es/widgets';
 import { searchClient } from './searchClient';
 import { ALGOLIA_PRODUCTS_INDEX_NAME } from './constants';
 import { ProductItem } from './plugins/productsPlugin';
@@ -146,21 +146,32 @@ search.addWidgets([
     container: '#categories',
     attributes: ['categoriesHierarchy.lvl0', 'categoriesHierarchy.lvl1', 'categoriesHierarchy.lvl2'],
   }),
-  // brandRefinementList({
-  //   container: '#brand-refine',
-  //   attribute: 'brandName',
-  //   sortBy: ['name:asc'],
-  //   // cssClasses: {
-  //   //   item: ['col-sm-3'],
-  //   // },
-  // }),
-  // priceRangeSlider({
-  //   container: '#price-refine',
-  //   attribute: 'skuPrice',
-  //   precision: -1,
-  //   pips: false
-  // }),
-]);
+  queryRuleCustomData({
+    container: '#queryRuleCustomData',
+    templates: {
+      default({ items }, { html }) {
+        return html`
+          ${items.map(item => {
+          const { banner, title, subtitle } = item;
+
+          if (!banner) {
+            return;
+          }
+
+          return `
+       <div class="banner">
+          <img src="${banner}">
+          <div class="caption">
+             <h1><span class="first-word">${title}</span></h1>
+             <p class="text">${subtitle}</p>
+          </div>
+       </div>
+       `;
+        }).join('')}
+        `;
+      },
+    }
+  })]);
 
 
 

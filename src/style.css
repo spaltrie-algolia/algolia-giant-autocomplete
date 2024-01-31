@@ -1,5 +1,62 @@
+.banner {
+  position: relative;
+  text-align: center;
+  color: white;
+  font-size: 1.5rem;
+  line-height: 0.5rem;
+  text-transform: uppercase;
+  font-weight: 400;
+  font-family: Overpass, Arial, Helvetica, sans-serif;
+  text-shadow: 0 0 5px rgba(0, 0, 0, .95)
+}
+
+.banner img {
+  width: 100%;
+  height: auto;
+}
+
+.caption {
+  position: absolute;
+  top: 25%;
+  left: 25%;
+}
+
+
+/* Container Tooltip */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  /* border-bottom: 1px dotted black; */
+  /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  margin-left: 10px;
+  margin-top: -5px;
+  visibility: hidden;
+  width: 410px;
+  background-color: yellow;
+  color: black;
+  text-align: left;
+  padding: 5px;
+  border-radius: 6px;
+  font-size: small;
+  line-height: 1em;
+
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
 .row {
   display: flex;
+  margin-bottom: 0.25rem;
 }
 
 .column {
@@ -7,8 +64,8 @@
 }
 
 .ais-perso-dropdown {
-  margin-top: -1em;
-  width: 180px;
+  margin-top: 0em;
+  width: 250px;
   float: right;
 }
 
@@ -37,6 +94,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   padding: 1rem;
+  margin-top: 0;
 }
 
 .container-autocomplete {
@@ -818,8 +876,8 @@ body {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  margin-top: -1em;
-  margin-bottom: 0.5em;
+  margin-top: 0em;
+  margin-bottom: 0em;
 }
 
 .current-refinements-class {
